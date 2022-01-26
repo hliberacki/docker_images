@@ -18,7 +18,7 @@ ENV ROS_VERSION=2 \
 
 WORKDIR $ROS2_WS
 
-RUN wget https://raw.githubusercontent.com/ros2/ros2/$ROS_DISTRO-release/ros2.repos \
+RUN wget https://raw.githubusercontent.com/hliberacki/ros2/develop/ros2.repos \
     && vcs import src < ros2.repos
 
 # install dependencies
@@ -35,13 +35,5 @@ RUN colcon \
     --mixin build-testing-on release \
     --cmake-args --no-warn-unused-cli
 
-ARG RUN_TESTS
-ARG FAIL_ON_TEST_FAILURE
-RUN if [ ! -z "$RUN_TESTS" ]; then \
-        colcon test; \
-        if [ ! -z "$FAIL_ON_TEST_FAILURE" ]; then \
-            colcon test-result; \
-        else \
-            colcon test-result || true; \
-        fi \
-    fi
+RUN colcon test; colcon test-result
+
